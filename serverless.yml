@@ -1,0 +1,41 @@
+service: SAFE-SIM-Customer-Cloud
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  environment: 
+    LOGGING_LEVEL: 1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - 'iot:DescribeEndpoint'
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - 'sts:AssumeRole'
+      Resource: "*"
+
+# plugins:
+#   - serverless-offline
+
+package:
+  patterns:
+#    - '!node_modules/**'
+    - '!package**'
+#    - include-me.js
+#    - include-me-dir/**
+
+functions:
+  createDeviceCert:
+    handler: index.handler
+    events:
+      - http:
+          path: certificate
+          method: post
+          cors: true
+    layers:
+      - arn:aws:lambda:${self:provider.region}:034541671702:layer:openssl-lambda:1

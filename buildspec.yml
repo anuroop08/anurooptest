@@ -1,0 +1,29 @@
+version: 0.2
+
+env:
+  variables:
+    stg:  $ENV_NAME
+
+phases:
+  install:   
+    commands:
+       - echo Initializing source npm repositories
+       - echo Install phase
+  
+  pre_build:
+    commands:
+      - echo Initializing source npm repositories
+      - npm install
+      - npm install -g serverless --unsafe-perm
+
+  build:
+    commands:
+      - echo start activation server project build ...
+      - echo $ENV_NAME $AWS_REGION
+      - sls deploy -v -s $ENV_NAME -r $AWS_REGION
+      - echo customer cloud build has been completed ...
+
+  post_build:
+     commands:
+      - echo post build
+      - ls
